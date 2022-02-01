@@ -52,7 +52,7 @@ print('\n Clearing blender scene (default garbage...)')
 bpy.ops.object.select_all(action='DESELECT')
 
 # selection
-bpy.data.objects['Camera'].select = True
+bpy.data.objects['Camera'].select_set(True)
 
 # remove it
 bpy.ops.object.delete() 
@@ -61,9 +61,9 @@ bpy.ops.object.delete()
 # select objects by type
 for o in bpy.data.objects:
     if o.type == 'MESH':
-        o.select = True
+        o.select_set(True)
     else:
-        o.select = False
+        o.select_set(False)
 
 # call the operator once
 bpy.ops.object.delete()
@@ -83,13 +83,13 @@ for obj in objectList:
 print("{} meshes".format(len(meshes)))
 
 for i, obj in enumerate(meshes):
-  bpy.context.scene.objects.active = obj
+  bpy.context.view_layer.objects.active = obj
   print("{}/{} meshes, name: {}".format(i, len(meshes), obj.name))
   print("{} has {} verts, {} edges, {} polys".format(obj.name, len(obj.data.vertices), len(obj.data.edges), len(obj.data.polygons)))
   modifier = obj.modifiers.new(modifierName,'DECIMATE')
   modifier.ratio = decimateRatio
   modifier.use_collapse_triangulate = True
-  bpy.ops.object.modifier_apply(apply_as='DATA', modifier=modifierName)
+  bpy.ops.object.modifier_apply(modifier=modifierName)
   print("{} has {} verts, {} edges, {} polys after decimation".format(obj.name, len(obj.data.vertices), len(obj.data.edges), len(obj.data.polygons)))
 
 bpy.ops.export_scene.obj(filepath=output_model)
